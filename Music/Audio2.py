@@ -2,6 +2,7 @@ import numpy
 import pyaudio
 import math
 import json
+from Music.Notes import Notes
  
  
 class Audio():
@@ -51,19 +52,13 @@ class Audio():
                 self.streamOpen = False
             return False
  
-    def play(self, sound, duration, amplitude = 0.5):
-        pass
-        # try:
-            # print(self.samples["C01"])
-        # except
-        # self.omega = float(self.samples[sound]) * (math.pi * 2) / self.samplerate
-        # self.amplitude = amplitude
-        # self.buffer_offset = 0
-        # self.streamOpen = True
-        # self.x_max = math.ceil(self.samplerate * duration) - 1
-        # self.stream = self.p.open(format=pyaudio.paFloat32,
-                                #   channels=1,
-                                #   rate=self.samplerate,
-                                #   output=True,
-                                #   frames_per_buffer=self.frames_per_buffer,
-                                #   stream_callback=self.callback)
+    def play(self, sound, notename=Notes.QUARTER_NOTE, amplitude = 0.5):
+        freq = self.samples.get(sound, None) 
+        if freq is None: raise Exception("The specified sound does not exist")
+
+        self.omega = float(freq) * (math.pi * 2) / self.samplerate
+        self.amplitude = amplitude
+        self.buffer_offset = 0
+        self.streamOpen = True
+        self.x_max = math.ceil(self.samplerate * notename.value[0]) - 1
+        self.stream = self.p.open(format=pyaudio.paFloat32, channels=1, rate=self.samplerate, output=True, frames_per_buffer=self.frames_per_buffer, stream_callback=self.callback)
