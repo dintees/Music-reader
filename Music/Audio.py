@@ -23,23 +23,29 @@ class Audio:
     def setEvent(self):
         self.event.set()
 
-    def play(self, playButton, stopButton):
-        self.musicThread = threading.Thread(target=self._play, args=(self.event, playButton, stopButton, ))
+    def play(self, playButton, stopButton, rate):
+        self.musicThread = threading.Thread(target=self._play, args=(self.event, playButton, stopButton, rate ))
         self.musicThread.start()
 
     def stop(self):
+        # try:
         self.setEvent()
         self.musicThread.join()
         self.event.clear()
+        # except:
+            # print("Error - during pressing stop button")
         # self.event.wait()
 
-    def _play(self, event, playButton, stopButton):
+    def _play(self, event, playButton, stopButton, rate):
+        oneBeat = 120 / rate
         for i in range(len(self.notes)):
             if event.is_set(): break
             freq = self.samples.get(self.notes[i], None) 
             # if freq is None: raise Exception("The specified sound does not exist")
             if freq is None: freq = 0
-            sine(frequency=freq, duration=self.durations[i].value[0]) # tempo * duration beat *** TODO ***
-        playButton.setEnabled(True)
-        stopButton.setEnabled(False)
-            
+            sine(frequency=freq, duration=self.durations[i].value[0] * oneBeat)
+        # try:
+            # playButton.setEnabled(True)
+            # stopButton.setEnabled(False)
+        # except:
+            # print("Error - end of music")

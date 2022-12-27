@@ -1,10 +1,11 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QLineEdit, QHBoxLayout, QVBoxLayout, QFileDialog
+from PyQt6.QtWidgets import QMainWindow, QWidget, QSpinBox, QHBoxLayout, QVBoxLayout, QFileDialog
 from GUI.Button import Button
 from GUI.Image import Image
 from GUI.Color import Color #dev
 from Music.Audio import Audio
 from Music.Notes import Notes
 import threading
+import sys
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -42,12 +43,13 @@ class MainWindow(QMainWindow):
         self.stopMusicButton.setEnabled(False)
         menuLayout.addWidget(self.stopMusicButton)
 
-        # *** TODO ***
-        # self.rate = QLineEdit()
-        # self.rate.setPlaceholderText("Rate [120]")
-        # # self.rate.setText("120")
-        # self.rate.setInputMask("099")
-        # menuLayout.addWidget(self.rate)
+        self.rate = QSpinBox()
+        self.rate.setMinimum(60)
+        self.rate.setMaximum(180)
+        self.rate.setValue(120)
+
+        menuLayout.addWidget(self.rate)
+        # self.rate.valueChanged.connect(self.rateChanged)
 
 
         btn = Button("Close application", self.close)
@@ -62,15 +64,27 @@ class MainWindow(QMainWindow):
 
         self.show()
 
+    # def rateChanged(self, i):
+        # print(f'Rate changed to {i}')
+
     def tempAlg(self):
         print("Im doing something with photo and after that...")
         self.playMusicButton.setEnabled(True)
 
+    def closeEvent(self, event):
+        try:
+            self.stopMusic()
+        except:
+            print("No music is playing")
+        finally:
+            sys.exit()
+
     def loadImage(self):
         fname = QFileDialog.getOpenFileName(self, "Open file", "${HOME}", "PNG Files (*.png);; JPG Files(*.jpg)")
         print(f'Loading image {fname[0]}')
-        self.readImage.setImage(fname[0], 500)
-        self.algorithmButton.setEnabled(True) # after reading notes
+        if fname[0] != '':
+            self.readImage.setImage(fname[0], 500)
+            self.algorithmButton.setEnabled(True) # after reading notes
 
     def playMusic(self):
         # print("I'm playing the music")
@@ -80,7 +94,7 @@ class MainWindow(QMainWindow):
         notes = ["E4", "E4", "E4", "E4", "E4", "E4", "-", "E4", "G4", "C4", "D4", "E4"]
         durations = [Notes.QUARTER_NOTE, Notes.QUARTER_NOTE, Notes.HALF_NOTE, Notes.QUARTER_NOTE, Notes.QUARTER_NOTE, Notes.HALF_NOTE, Notes.HALF_NOTE, Notes.QUARTER_NOTE, Notes.QUARTER_NOTE, Notes.QUARTER_NOTE, Notes.QUARTER_NOTE, Notes.WHOLE_NOTE]
         self.p.set(notes, durations)
-        self.p.play(self.playMusicButton, self.stopMusicButton)
+        self.p.play(self.playMusicButton, self.stopMusicButton, self.rate.value())
 
     def stopMusic(self):
         self.p.stop()
