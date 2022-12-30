@@ -38,14 +38,16 @@ class Audio:
 
     def _play(self, event, playButton, stopButton, rate):
         oneBeat = 120 / rate
+        print("Start playing music")
         for i in range(len(self.notes)):
-            if event.is_set(): break
+            if event.is_set(): 
+                print("Terminating music")
+                return
             freq = self.samples.get(self.notes[i], None) 
             # if freq is None: raise Exception("The specified sound does not exist")
             if freq is None: freq = 0
             sine(frequency=freq, duration=self.durations[i].value[0] * oneBeat)
-        # try:
-            # playButton.setEnabled(True)
-            # stopButton.setEnabled(False)
-        # except:
-            # print("Error - end of music")
+        
+        playButton.setEnabled(True)
+        stopButton.setEnabled(False)
+        print("End of music")
