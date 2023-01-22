@@ -1,1 +1,1 @@
-# Music-reader
+.# Music-reader
