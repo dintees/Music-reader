@@ -102,41 +102,41 @@ if __name__=='__main__':
             for k in line_5:
                 # print(k)
                 dist = (k[-1] - k[0]) / 4
+                d = (dist - 4) / 2
                 # print(dist)
-                if k[0]+5 >= j[1] >= k[0]-5:
+                if k[0]+d >= j[1] >= k[0]-d:
                     # print(j, ' 1')
                     notes_in_line.append('')
-                elif k[1]+5 >= j[1] >= k[1]-5:
+                elif k[1]+d >= j[1] >= k[1]-d:
                     # print(j, ' 2')
                     notes_in_line.append('')
-                elif k[2]+5 >= j[1] >= k[2]-5:
+                elif k[2]+d >= j[1] >= k[2]-d:
                     # print(j, ' 3')
                     notes_in_line.append('')
-                elif k[3]+5 >= j[1] >= k[3]-5:
+                elif k[3]+d >= j[1] >= k[3]-d:
                     # print(j, ' 4')
                     notes_in_line.append('G')
-                elif k[4]+5 >= j[1] >= k[4]-5:
+                elif k[4]+d >= j[1] >= k[4]-d:
                     # print(j, ' 5')
                     notes_in_line.append('E')
-                elif k[4]+dist-5 <= j[1] <= k[4]+5+dist:
+                elif k[4]+dist-d <= j[1] <= k[4]+d+dist:
                     # print(j, ' 6')
                     notes_in_line.append('C')
-                elif k[0]+5 <= j[1] <= k[1]-5:
+                elif k[0]+d <= j[1] <= k[1]-d:
                     # print(j, '1 2')
                     notes_in_line.append('')
-                elif k[1]+5 <= j[1] <= k[2]-5:
+                elif k[1]+d <= j[1] <= k[2]-d:
                     # print(j, '2 3')
                     notes_in_line.append('')
-                elif k[2]+5 <= j[1] <= k[3]-5:
+                elif k[2]+d <= j[1] <= k[3]-d:
                     # print(j, '3 4')
                     notes_in_line.append('')
-                elif k[3]+5 <= j[1] <= k[4]-5:
+                elif k[3]+d <= j[1] <= k[4]-d:
                     # print(j, '4 5')
                     notes_in_line.append('F')
-                elif k[4]+5 <= j[1] <= k[4]-5+dist:
+                elif k[4]+d <= j[1] <= k[4]-d+dist:
                     # print(j, '5 6')
                     notes_in_line.append('D')
-        print('\n')
         tune.append(notes_in_line)
 
     print('Nuty na piecioliniach:\n', tune, '\n')
