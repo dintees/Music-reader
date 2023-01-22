@@ -4,6 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pyqt6 = "*"
+pysine = "*"
+pyaudio = "*"
 matlabengine = "*"
 numpy = "*"
 
