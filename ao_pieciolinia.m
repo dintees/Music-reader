@@ -14,7 +14,7 @@ function h = ao_pieciolinia(file)
     a = regionprops(tmp, 'Area');
     l = bwlabel(tmp);
     for i=1:length(a)
-        if a(i).Area < 20
+        if a(i).Area < 10
             l(l==i) = 0;
         end
     end
@@ -31,7 +31,14 @@ function h = ao_pieciolinia(file)
         end
     end
 
-    a = regionprops(l>0, 'Centroid');
+%     bin = bwmorph(l>0, 'thin');
+%     bin = imclose(bin, ones(7));
+    length_mask = zeros(101);
+    length_mask(51,:) = ones(1,101);
+    bin = imdilate(l>0, length_mask);
+    bin = imdilate(bin, length_mask);
+
+    a = regionprops(bin, 'Centroid');
     h = zeros(1,length(a));
     for i=1:length(a)
         h(i)=a(i).Centroid(2);

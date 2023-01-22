@@ -2,7 +2,6 @@ import matlab.engine
 import numpy as np
 from math import sqrt
 from statistics import median
-import matplotlib.pyplot as plt
 import threading
 
 note_poz=[]
@@ -27,7 +26,7 @@ def get_notes_poz(eng, name):
             tmp = note_poz[i]-note_poz[j]
             
             if sqrt(tmp[0]**2 + tmp[1]**2) < 30:
-                if note_poz[i,1] > note_poz[j,1]:
+                if note_poz[i,1] < note_poz[j,1]:
                     to_del[i]=None
                 else:
                     to_del[j]=None
@@ -38,6 +37,9 @@ def get_notes_poz(eng, name):
 def get_lines_poz(eng, name):
     global line_h
     line_h = np.array(eng.ao_pieciolinia(name))
+
+def generate_notes(name):
+    pass
 
 
 if __name__=='__main__':
@@ -50,10 +52,10 @@ if __name__=='__main__':
     s = eng_p.genpath('wspolczynniki_morf')
     eng_p.addpath(s, nargout=0)
 
-    plik = 'nuty.jpg'
+    name = 'nuty1.jpg'
 
-    t1 = threading.Thread(target=get_notes_poz, args=(eng_n, plik))
-    t2 = threading.Thread(target=get_lines_poz, args=(eng_p, plik))
+    t1 = threading.Thread(target=get_notes_poz, args=(eng_n, name))
+    t2 = threading.Thread(target=get_lines_poz, args=(eng_p, name))
     
     t1.start()
     t2.start()
@@ -100,19 +102,21 @@ if __name__=='__main__':
         notes_in_line=[]
         for j in i:
             for k in line_5:
+                if len(k)<5:
+                    continue
                 # print(k)
                 dist = (k[-1] - k[0]) / 4
                 d = (dist - 4) / 2
                 # print(dist)
                 if k[0]+d >= j[1] >= k[0]-d:
                     # print(j, ' 1')
-                    notes_in_line.append('')
+                    notes_in_line.append('F^')
                 elif k[1]+d >= j[1] >= k[1]-d:
                     # print(j, ' 2')
-                    notes_in_line.append('')
+                    notes_in_line.append('D^')
                 elif k[2]+d >= j[1] >= k[2]-d:
                     # print(j, ' 3')
-                    notes_in_line.append('')
+                    notes_in_line.append('H')
                 elif k[3]+d >= j[1] >= k[3]-d:
                     # print(j, ' 4')
                     notes_in_line.append('G')
@@ -124,19 +128,22 @@ if __name__=='__main__':
                     notes_in_line.append('C')
                 elif k[0]+d <= j[1] <= k[1]-d:
                     # print(j, '1 2')
-                    notes_in_line.append('')
+                    notes_in_line.append('E^')
                 elif k[1]+d <= j[1] <= k[2]-d:
                     # print(j, '2 3')
-                    notes_in_line.append('')
+                    notes_in_line.append('C^')
                 elif k[2]+d <= j[1] <= k[3]-d:
                     # print(j, '3 4')
-                    notes_in_line.append('')
+                    notes_in_line.append('A')
                 elif k[3]+d <= j[1] <= k[4]-d:
                     # print(j, '4 5')
                     notes_in_line.append('F')
                 elif k[4]+d <= j[1] <= k[4]-d+dist:
                     # print(j, '5 6')
                     notes_in_line.append('D')
+                elif k[4]+d+dist <= j[1] <= k[4]-d+2*dist:
+                    # print(j, '6+')
+                    notes_in_line.append('H_')
         tune.append(notes_in_line)
 
     print('Nuty na piecioliniach:\n', tune, '\n')
